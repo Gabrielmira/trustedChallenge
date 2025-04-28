@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model saved_matches {
+  id            String   @id @default(uuid())
+  userId        String
+  matchId       String
+  summonerName  String
+  championName  String
+  result        String
+  gameType      String
+  gameDuration  Int
+  goldPerMinute Int
+  kills         Int
+  deaths        Int
+  assists       Int
+  date          DateTime @default(now())
+  teammates     Json
+  items         Json?    @db.Json
+  damageDealt   Int?
+  damageTaken   Int?
+  visionScore   Int?
+  cs            Int?
+  enemyTeam     Json?    @db.Json
+  users         users    @relation(fields: [userId], references: [id])
+}
+
+model users {
+  id            String          @id
+  email         String          @unique
+  name          String?
+  saved_matches saved_matches[]
+}
