@@ -9,6 +9,8 @@ import { useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 
+
+
 export interface MatchListProps {
     matches: {
         username: string;
@@ -21,13 +23,12 @@ export interface MatchListProps {
         kills: number;
         deaths: number;
         assists: number;
-        date: string;
         teammates: {
             summonerName: string;
             championName: string;
         }[];
     }[];
-    mode?: "history" | "saved"; // <- aqui o modo
+    mode?: "history" | "saved";
 }
 
 export default function MatchList({ matches, mode = "history" }: MatchListProps) {
@@ -42,7 +43,7 @@ export default function MatchList({ matches, mode = "history" }: MatchListProps)
         }
 
         if (savedMatchIds.includes(match.matchId)) {
-            return; // Já salvo
+            return;
         }
 
         setSavingMatchIds((prev) => [...prev, match.matchId]);
@@ -124,7 +125,6 @@ export default function MatchList({ matches, mode = "history" }: MatchListProps)
                                                 <div className="flex items-center gap-2 mb-2">
                                                     <Badge variant="outline">{match.gameType}</Badge>
                                                     <span className="text-xs text-muted-foreground">
-                                                        {match.date}
                                                     </span>
                                                 </div>
 
@@ -176,7 +176,7 @@ export default function MatchList({ matches, mode = "history" }: MatchListProps)
                                                         variant="outline"
                                                         size="sm"
                                                         onClick={(e) => {
-                                                            e.preventDefault(); // impedir clique no Link
+                                                            e.preventDefault();
                                                             handleSaveMatch(match);
                                                         }}
                                                         disabled={isSaving || isSaved}

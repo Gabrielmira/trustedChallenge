@@ -25,7 +25,7 @@ import {
 import {Coins, Heart, Skull, Swords, Timer, Award, Sword, Shield, Zap} from "lucide-react"
 import Link from "next/link";
 
-interface MatchDetailsProps {
+export interface MatchDetailsProps {
     match: {
         matchId: string
         summonerName: string
@@ -37,7 +37,6 @@ interface MatchDetailsProps {
         kills: number
         deaths: number
         assists: number
-        date: string
         teammates: {
             riotTag: string
             summonerName: string
@@ -117,7 +116,6 @@ export default function MatchDetails({match}: MatchDetailsProps) {
                             <div className="flex flex-col gap-2 mt-4 md:mt-0">
                                 <div className="flex items-center gap-2">
                                     <Badge variant="outline">{match.gameType}</Badge>
-                                    <span className="text-sm text-muted-foreground">{match.date}</span>
                                 </div>
 
                                 <div className="flex items-center gap-3">

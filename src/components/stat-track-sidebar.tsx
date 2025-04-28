@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import {Shield, Menu, X, User} from "lucide-react"
+import {Shield, Menu, X, User, Home} from "lucide-react"
 import {cn} from "@/lib/utils"
 import {SignedOut, SignInButton, SignUpButton, UserButton} from "@clerk/nextjs"
 import Link from "next/link"
@@ -102,7 +102,6 @@ export function StatTrackSidebar() {
                     </SignedOut>
                     <UserButton showName={true}/>
                 </div>
-
                 <div className="flex-1 py-4 px-4">
                     <Link
                         href="/profile"
@@ -112,8 +111,17 @@ export function StatTrackSidebar() {
                         <User className="h-4 w-4"/>
                         <span className="text-sm font-medium">Perfil</span>
                     </Link>
+                    <Link
+                    href="/"
+                    className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-gray-50 cursor-pointe"
+                    onClick={() => setIsSidebarOpen(false)}>
+                    <Home className="h-4 w-4"/>
+                    <span className="text-sm font-medium">Home</span>
+                    </Link>
                 </div>
             </aside>
+
+
 
             {isSidebarOpen && (
                 <div

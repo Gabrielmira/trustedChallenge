@@ -3569,11 +3569,11 @@ export namespace Prisma {
 
   export type saved_matchesWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    matchId?: string
     AND?: saved_matchesWhereInput | saved_matchesWhereInput[]
     OR?: saved_matchesWhereInput[]
     NOT?: saved_matchesWhereInput | saved_matchesWhereInput[]
     userId?: StringFilter<"saved_matches"> | string
-    matchId?: StringFilter<"saved_matches"> | string
     summonerName?: StringFilter<"saved_matches"> | string
     championName?: StringFilter<"saved_matches"> | string
     result?: StringFilter<"saved_matches"> | string
@@ -3592,7 +3592,7 @@ export namespace Prisma {
     cs?: IntNullableFilter<"saved_matches"> | number | null
     enemyTeam?: JsonNullableFilter<"saved_matches">
     users?: XOR<UsersScalarRelationFilter, usersWhereInput>
-  }, "id">
+  }, "id" | "matchId">
 
   export type saved_matchesOrderByWithAggregationInput = {
     id?: SortOrder

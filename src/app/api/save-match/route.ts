@@ -52,7 +52,6 @@ export async function POST(req: Request) {
                 kills,
                 deaths,
                 assists,
-                date: new Date(),
                 teammates: teammates || [],
                 items: items || [],
                 damageDealt: totalDamageDealtToChampions || 0,

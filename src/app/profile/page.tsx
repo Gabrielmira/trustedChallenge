@@ -3,8 +3,7 @@ import { PrismaClient } from "@/generated/prisma"; // ajuste o caminho se precis
 import MatchList from "@/components/matches-list"; // ajuste o caminho se precisar
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+
 
 const prisma = new PrismaClient();
 
@@ -29,7 +28,6 @@ async function getSavedMatches(userId: string) {
         kills: match.kills,
         deaths: match.deaths,
         assists: match.assists,
-        date: format(match.date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR }),
         teammates: match.teammates as {
             summonerName: string;
             championName: string;

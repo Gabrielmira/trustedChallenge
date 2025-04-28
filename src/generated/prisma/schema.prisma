@@ -11,7 +11,7 @@ datasource db {
 model saved_matches {
   id            String   @id @default(uuid())
   userId        String
-  matchId       String
+  matchId       String   @unique
   summonerName  String
   championName  String
   result        String

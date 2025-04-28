@@ -1,4 +1,4 @@
-import { MatchDetails, Teammate, Participant } from "@/app/types/riot";
+import { Teammate, Participant } from "@/app/types/riot";
 
 export async function getPuuid(name: string, tag: string) {
     const encodedName = encodeURIComponent(name);
@@ -61,7 +61,7 @@ export async function getMatchDetails(matchId: string, puuid: string): Promise<{
     summonerName: string;
     riotTag: string;
     championName: string;
-    result: string;
+    result: "victory" | "defeat";
     gameType: number;
     gameDuration: number;
     goldPerMinute: number;
@@ -116,8 +116,8 @@ export async function getMatchDetails(matchId: string, puuid: string): Promise<{
                 championName: teammate.championName
             }));
 
-        const dateFormatted = new Date(data.info.gameCreation).toLocaleDateString('pt-BR');
-
+        //const dateFormatted = new Date(data.info.gameCreation).toLocaleDateString('pt-BR');
+        
         return {
             matchId: matchId,
             summonerName: participant.riotIdGameName,
@@ -130,17 +130,15 @@ export async function getMatchDetails(matchId: string, puuid: string): Promise<{
             kills: participant.kills,
             deaths: participant.deaths,
             assists: participant.assists,
-            date: dateFormatted,
+            date: data.date,
             teammates: teammates,
-            items: [
-                participant.item0,
-                participant.item1,
-                participant.item2,
-                participant.item3,
-                participant.item4,
-                participant.item5,
-                participant.item6,
-            ],
+            item0: participant.item0,
+            item1: participant.item1,
+            item2: participant.item2,
+            item3: participant.item3,
+            item4: participant.item4,
+            item5: participant.item5,
+            item6: participant.item6,
             totalDamageTaken: participant.totalDamageTaken,
             totalDamageDealtToChampions: participant.totalDamageDealtToChampions,
             totalMinionsKilled: participant.totalMinionsKilled,
