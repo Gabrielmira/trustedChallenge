@@ -1,10 +1,6 @@
 import {auth, currentUser} from "@clerk/nextjs/server";
-import {PrismaClient} from "@/generated/prisma";
+import {prisma} from "@/lib/prisma";
 import {NextResponse} from "next/server";
-
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
-export const prisma = globalForPrisma.prisma || new PrismaClient();
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 export async function POST(req: Request) {
     try {
@@ -46,16 +42,16 @@ export async function POST(req: Request) {
 
         const savedMatch = await prisma.saved_matches.create({
             data: {
-                matchId: matchId,
-                summonerName: summonerName,
-                championName: championName,
+                matchId,
+                summonerName,
+                championName,
                 result: result?.toLowerCase() === 'victory' ? 'VICTORY' : 'DEFEAT',
-                gameType: gameType,
+                gameType,
                 gameDuration: isNaN(parseInt(String(gameDuration))) ? 0 : parseInt(String(gameDuration)),
                 goldPerMinute: goldPerMinute || 0,
-                kills: kills,
-                deaths: deaths,
-                assists: assists,
+                kills,
+                deaths,
+                assists,
                 date: new Date(),
                 teammates: teammates || [],
                 items: items || [],
