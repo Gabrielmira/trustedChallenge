@@ -1,6 +1,8 @@
-import {getMatchDetails, getPuuid} from "@/app/server/riotapi/helpers";
+import {getMatchDetails, getPuuid } from "@/app/server/riotapi/helpers";
 import MatchDetails from "@/components/matches-details";
-import {Suspense} from "react";
+import { Suspense } from "react";
+
+type tParams = Promise<{ username: string; matchId: string }>;
 
 function formatDuration(durationSeconds: number) {
     const minutes = Math.floor(durationSeconds / 60);
@@ -8,15 +10,9 @@ function formatDuration(durationSeconds: number) {
     return `${minutes}m ${seconds}s`;
 }
 
-interface PageProps {
-    params: {
-        username: string;
-        matchId: string;
-    }
-}
 
-export default async function MatchDetailsPage({params}: PageProps) {
-    const {username, matchId} = params;
+export default async function MatchDetailsPage({ params }: { params: tParams }) {
+    const { username, matchId }: { username: string; matchId: string } = await params; // aguarda a Promise resolver
 
     try {
         const usernameDecoded = decodeURIComponent(username);
@@ -31,19 +27,19 @@ export default async function MatchDetailsPage({params}: PageProps) {
         const matchDetailData = await getMatchDetails(matchId, summoner);
 
         const matchDetail = {
-            username: name,
-            tag: tag,
+            username: name, // Use o nome extraído
+            tag: tag,       // Use a tag extraída
             matchId: matchDetailData.matchId,
             summonerName: matchDetailData.summonerName,
             gameDuration: matchDetailData.gameDuration,
             championName: matchDetailData.championName,
             result: matchDetailData.result,
             gameType: String(matchDetailData.gameType),
-            duration: formatDuration(matchDetailData.gameDuration),
+            duration: formatDuration(matchDetailData.gameDuration), // Formate a duração
             kills: matchDetailData.kills,
             deaths: matchDetailData.deaths,
             assists: matchDetailData.assists,
-            teammates: matchDetailData.teammates as {
+            teammates: matchDetailData.teammates as { // Adapte conforme a estrutura real de teammates
                 riotTag: string;
                 summonerName: string;
                 championName: string;
