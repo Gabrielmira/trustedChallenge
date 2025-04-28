@@ -1,8 +1,6 @@
-import {getMatchDetails, getPuuid } from "@/app/server/riotapi/helpers";
+import {getMatchDetails, getPuuid} from "@/app/server/riotapi/helpers";
 import MatchDetails from "@/components/matches-details";
-import { Suspense } from "react";
-
-type tParams = Promise<{ username: string; matchId: string }>;
+import {Suspense} from "react";
 
 function formatDuration(durationSeconds: number) {
     const minutes = Math.floor(durationSeconds / 60);
@@ -10,9 +8,15 @@ function formatDuration(durationSeconds: number) {
     return `${minutes}m ${seconds}s`;
 }
 
+interface PageProps {
+    params: {
+        username: string;
+        matchId: string;
+    }
+}
 
-export default async function MatchDetailsPage({ params }: { params: tParams }) {
-    const { username, matchId }: { username: string; matchId: string } = await params; // aguarda a Promise resolver
+export default async function MatchDetailsPage({params}: PageProps) {
+    const {username, matchId} = params; // Não precisa aguardar, não é uma Promise
 
     try {
         const usernameDecoded = decodeURIComponent(username);
