@@ -10,25 +10,26 @@ import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 
 
-
-export interface MatchListProps {
-    matches: {
-        username: string;
-        tag: string;
-        matchId: string;
+export interface Match {
+    username: string;
+    tag: string;
+    matchId: string;
+    championName: string;
+    result: "victory" | "defeat";
+    gameType: string;
+    duration: string;
+    kills: number;
+    deaths: number;
+    assists: number;
+    teammates: {
+        summonerName: string;
         championName: string;
-        result: "victory" | "defeat";
-        gameType: string;
-        duration: string;
-        kills: number;
-        deaths: number;
-        assists: number;
-        teammates: {
-            summonerName: string;
-            championName: string;
-        }[];
     }[];
-    mode?: "history" | "saved";
+}
+
+export interface MatchListProps{
+    matches: Match[]
+    mode: "saved" | "history"
 }
 
 export default function MatchList({ matches, mode = "history" }: MatchListProps) {
@@ -36,7 +37,7 @@ export default function MatchList({ matches, mode = "history" }: MatchListProps)
     const [savingMatchIds, setSavingMatchIds] = useState<string[]>([]);
     const [savedMatchIds, setSavedMatchIds] = useState<string[]>([]);
 
-    async function handleSaveMatch(match: any) {
+    async function handleSaveMatch(match: Match) {
         if (!isSignedIn || !userId) {
             alert("Você precisa estar logado para salvar partidas.");
             return;
