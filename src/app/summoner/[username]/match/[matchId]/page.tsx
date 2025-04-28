@@ -2,12 +2,6 @@ import { getMatchDetails, getPuuid } from "@/app/server/riotapi/helpers";
 import MatchDetails from "@/components/matches-details";
 import { Suspense } from "react";
 
-function formatDuration(durationSeconds: number) {
-    const minutes = Math.floor(durationSeconds / 60);
-    const seconds = durationSeconds % 60;
-    return `${minutes}m ${seconds}s`;
-}
-
 interface Params {
     username: string;
     matchId: string;
@@ -17,6 +11,7 @@ export default async function MatchDetailsPage({ params }: { params: Params }) {
     const { username, matchId } = params;
 
     try {
+        // Decodifica e valida o formato do username
         const usernameDecoded = decodeURIComponent(username);
         const parts = usernameDecoded.split("#");
 
@@ -78,4 +73,11 @@ export default async function MatchDetailsPage({ params }: { params: Params }) {
             </div>
         );
     }
+}
+
+// Função para formatar a duração
+function formatDuration(durationSeconds: number) {
+    const minutes = Math.floor(durationSeconds / 60);
+    const seconds = durationSeconds % 60;
+    return `${minutes}m ${seconds}s`;
 }
