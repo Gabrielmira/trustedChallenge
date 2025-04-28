@@ -1,12 +1,12 @@
 'use client'
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Clock, Swords, Trophy, Users } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { useAuth } from "@clerk/nextjs";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {Badge} from "@/components/ui/badge";
+import {Card, CardContent} from "@/components/ui/card";
+import {Clock, Swords, Trophy, Users} from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {useState} from "react";
+import {useAuth} from "@clerk/nextjs";
 import Link from "next/link";
 
 
@@ -22,20 +22,22 @@ export interface Match {
     deaths: number;
     assists: number;
     teammates: {
+        riotTag: string;
         summonerName: string;
         championName: string;
     }[];
 }
 
-export interface MatchListProps{
+export interface MatchListProps {
     matches: Match[]
     mode: "saved" | "history"
 }
 
-export default function MatchList({ matches, mode = "history" }: MatchListProps) {
-    const { userId, isSignedIn } = useAuth();
+export default function MatchList({matches, mode = "history"}: MatchListProps) {
+    const {userId, isSignedIn} = useAuth();
     const [savingMatchIds, setSavingMatchIds] = useState<string[]>([]);
     const [savedMatchIds, setSavedMatchIds] = useState<string[]>([]);
+
 
     async function handleSaveMatch(match: Match) {
         if (!isSignedIn || !userId) {
@@ -55,7 +57,7 @@ export default function MatchList({ matches, mode = "history" }: MatchListProps)
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ userId, match }),
+                body: JSON.stringify({userId, match}),
             });
 
             if (!response.ok) {
@@ -74,15 +76,13 @@ export default function MatchList({ matches, mode = "history" }: MatchListProps)
     if (!matches || matches.length === 0) {
         return (
             <div className="w-full max-w-4xl mx-auto p-4 text-center">
-                <p className="text-muted-foreground">No matches found.</p>
+                <p className="text-muted-foreground">Nenhuma partida encontrada.</p>
             </div>
         );
     }
 
     return (
         <div className="w-full max-w-4xl mx-auto space-y-4 p-4">
-            <h2 className="text-2xl font-bold mb-6">Match History</h2>
-
             {matches.map((match) => {
                 const isSaving = savingMatchIds.includes(match.matchId);
                 const isSaved = mode === "saved" || savedMatchIds.includes(match.matchId);
@@ -90,8 +90,8 @@ export default function MatchList({ matches, mode = "history" }: MatchListProps)
                 return (
                     <Link
                         key={match.matchId}
-                        href={`/summoner/${encodeURIComponent(match.username)}%23${encodeURIComponent(match.tag)}/match/${match.matchId}`}
-                        style={{ textDecoration: 'none', color: 'inherit' }}
+                        href={`/summoner/${encodeURIComponent(match.username)}/${encodeURIComponent(match.tag)}/matches/${match.matchId}`}
+                        style={{textDecoration: 'none', color: 'inherit'}}
                     >
                         <Card
                             className={`overflow-hidden border-l-4 ${
@@ -115,7 +115,7 @@ export default function MatchList({ matches, mode = "history" }: MatchListProps)
                                             variant={match.result === "victory" ? "success" : "destructive"}
                                             className="mt-2"
                                         >
-                                            {match.result}
+                                            {match.result === "victory" ? "Vitória" : "Derrota"}
                                         </Badge>
                                     </div>
 
@@ -131,22 +131,23 @@ export default function MatchList({ matches, mode = "history" }: MatchListProps)
 
                                                 <div className="flex items-center gap-4 mb-4">
                                                     <div className="flex items-center gap-1 text-sm">
-                                                        <Clock className="h-4 w-4 text-muted-foreground" />
+                                                        <Clock className="h-4 w-4 text-muted-foreground"/>
                                                         <span>{match.duration}</span>
                                                     </div>
                                                     <div className="flex items-center gap-1 text-sm">
-                                                        <Swords className="h-4 w-4 text-muted-foreground" />
+                                                        <Swords className="h-4 w-4 text-muted-foreground"/>
                                                         <span className="font-medium">{match.kills}</span>
                                                         <span className="text-muted-foreground">/</span>
-                                                        <span className="font-medium text-destructive">{match.deaths}</span>
+                                                        <span
+                                                            className="font-medium text-destructive">{match.deaths}</span>
                                                         <span className="text-muted-foreground">/</span>
                                                         <span className="font-medium">{match.assists}</span>
                                                     </div>
                                                 </div>
 
                                                 <div className="flex items-center gap-2">
-                                                    <Users className="h-4 w-4 text-muted-foreground" />
-                                                    <span className="text-sm font-medium">Team:</span>
+                                                    <Users className="h-4 w-4 text-muted-foreground"/>
+                                                    <span className="text-sm font-medium">Equipe:</span>
                                                     <div className="flex -space-x-2">
                                                         {match.teammates.map((teammate, index) => (
                                                             <Avatar
@@ -166,11 +167,10 @@ export default function MatchList({ matches, mode = "history" }: MatchListProps)
                                                 </div>
                                             </div>
 
-                                            {/* Botão de salvar */}
                                             {mode !== "saved" && (
                                                 <div className="flex flex-col items-center justify-center gap-2">
                                                     {match.result === "victory" && (
-                                                        <Trophy className="h-10 w-10 text-emerald-500" />
+                                                        <Trophy className="h-10 w-10 text-emerald-500"/>
                                                     )}
 
                                                     <Button

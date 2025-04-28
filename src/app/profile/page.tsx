@@ -29,6 +29,7 @@ async function getSavedMatches(userId: string) {
         deaths: match.deaths,
         assists: match.assists,
         teammates: match.teammates as {
+            riotTag: string;
             summonerName: string;
             championName: string;
         }[],
@@ -52,6 +53,7 @@ export default async function SavedMatchesPage() {
 
     return (
         <div className="p-8">
+            <h1 className="text-2xl font-bold mb-6 text-center">Partidas Salvas</h1>
             <MatchList matches={matches} mode={"saved"} />
         </div>
     );

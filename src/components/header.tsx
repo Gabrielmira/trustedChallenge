@@ -8,17 +8,25 @@ import {useRouter} from "next/navigation";
 
 export default function Header() {
     const [username, setUsername] = useState("");
-    const router = useRouter();
+    const {replace} = useRouter();
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        const formattedUsername = username.trim().replace(/[^a-zA-Z0-9#]/g, '');
-        if (!formattedUsername.includes('#')) {
-            alert("Por favor, insira um nome de invocador com #tag (exemplo: Faker#KR1)");
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        if (!username.includes("#")) {
+            alert("Digite no formato Nome#Tag (ex: Faker#KR1)");
             return;
         }
-        router.push(`/summoner/${encodeURIComponent(formattedUsername)}`);
-    };
+
+        const [gameName, tagLine] = username.split("#");
+
+        if (!gameName || !tagLine) {
+            alert("Formato inválido. Use Nome#Tag.");
+            return;
+        }
+
+        replace(`/summoner/${gameName}/${tagLine}`);
+    }
 
     return (
         <div className="py-16 container px-4 md:px-6">

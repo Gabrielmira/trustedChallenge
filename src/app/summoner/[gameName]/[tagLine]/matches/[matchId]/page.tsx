@@ -1,49 +1,34 @@
-import {getMatchDetails, getPuuid} from "@/app/server/riotapi/helpers";
+import { Suspense } from "react";
+import { getMatchDetails, getPuuid } from "@/app/server/riotapi/helpers";
 import MatchDetails from "@/components/matches-details";
-import {Suspense} from "react";
 
-function formatDuration(durationSeconds: number) {
-    const minutes = Math.floor(durationSeconds / 60);
-    const seconds = durationSeconds % 60;
-    return `${minutes}m ${seconds}s`;
-}
-
-interface PageProps {
-    params: {
-        username: string;
-        matchId: string;
-    }
-}
-
-export default async function MatchDetailsPage({params}: PageProps) {
-    const {username, matchId} = params; // Não precisa aguardar, não é uma Promise
+export default async function MatchDetailsPage({
+                                                   params,
+                                               }: {
+    params: Promise<{ gameName: string; tagLine: string; matchId: string }>;
+}) {
+    const { gameName, tagLine, matchId } = await params;
 
     try {
-        const usernameDecoded = decodeURIComponent(username);
-        const parts = usernameDecoded.split("#");
+        const name = decodeURIComponent(gameName);
+        const tag = decodeURIComponent(tagLine);
 
-        if (parts.length !== 2 || !parts[0] || !parts[1]) {
-            throw new Error("Formato de nome de usuário inválido. Use o formato 'nome#tag'");
-        }
-
-        const [name, tag] = parts;
         const summoner = await getPuuid(name, tag);
         const matchDetailData = await getMatchDetails(matchId, summoner);
 
         const matchDetail = {
-            username: name, // Use o nome extraído
-            tag: tag,       // Use a tag extraída
+            username: name,
+            tag: tag,
             matchId: matchDetailData.matchId,
             summonerName: matchDetailData.summonerName,
             gameDuration: matchDetailData.gameDuration,
             championName: matchDetailData.championName,
             result: matchDetailData.result,
             gameType: String(matchDetailData.gameType),
-            duration: formatDuration(matchDetailData.gameDuration), // Formate a duração
             kills: matchDetailData.kills,
             deaths: matchDetailData.deaths,
             assists: matchDetailData.assists,
-            teammates: matchDetailData.teammates as { // Adapte conforme a estrutura real de teammates
+            teammates: matchDetailData.teammates as {
                 riotTag: string;
                 summonerName: string;
                 championName: string;
@@ -65,7 +50,7 @@ export default async function MatchDetailsPage({params}: PageProps) {
         return (
             <div>
                 <Suspense fallback={<div>Carregando detalhes da partida...</div>}>
-                    <MatchDetails match={matchDetail}/>
+                    <MatchDetails match={matchDetail} />
                 </Suspense>
             </div>
         );

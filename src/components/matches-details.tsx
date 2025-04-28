@@ -27,7 +27,9 @@ import Link from "next/link";
 
 export interface MatchDetailsProps {
     match: {
+        tag: string
         matchId: string
+
         summonerName: string
         championName: string
         result: "victory" | "defeat"
@@ -168,8 +170,7 @@ export default function MatchDetails({match}: MatchDetailsProps) {
                                 <div className="flex -space-x-2">
                                     {match.teammates.map((teammate) => (
                                         <Link key={teammate.summonerName}
-                                              href={`/summoner/${encodeURIComponent(teammate.summonerName)}%23${encodeURIComponent(teammate.riotTag)}`}>
-                                            <Avatar
+                                              href={`/summoner/${encodeURIComponent(teammate.summonerName)}/${encodeURIComponent(teammate.riotTag)}`}>                                                <Avatar
                                                 className="h-8 w-8 border border-background hover:opacity-80 transition-opacity">
                                                 <AvatarImage
                                                     src={`https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${teammate.championName}.png`}
@@ -371,7 +372,7 @@ export default function MatchDetails({match}: MatchDetailsProps) {
                                 </div>
                                 {match.teammates.map((teammate) => (
                                     <Link
-                                        href={`/summoner/${encodeURIComponent(teammate.summonerName)}%23${encodeURIComponent(teammate.riotTag)}`}
+                                        href={`/summoner/${encodeURIComponent(teammate.summonerName)}/${encodeURIComponent(teammate.riotTag)}`}
                                         key={teammate.summonerName}>
                                         <div
                                             className="flex flex-col items-center p-4 bg-muted rounded-lg hover:bg-muted/80 transition-colors">

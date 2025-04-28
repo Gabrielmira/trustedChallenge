@@ -1,31 +1,40 @@
 import { getMatchDetails, getMatches, getPuuid } from "@/app/server/riotapi/helpers";
 import MatchList from "@/components/matches-list";
 
-type tParams = Promise<{ username: string }>;
+export default async function Component(
+    props: {
+        params: Promise<{ gameName: string; tagLine: string }>;
+    }
+) {
+    const { gameName, tagLine } = await props.params;
 
-export default async function MatchesPage({ params }: { params: tParams }) {
-    const { username } = await params;
+    if (!gameName || !tagLine) {
+        return <div>Formato inválido. Verifique o nome e tag.</div>;
+    }
 
-    const usernameDecoded = decodeURIComponent(username);
-    const [name, tag] = usernameDecoded.split('#');
 
     try {
-        const summoner = await getPuuid(name, tag);
+        // Obter o PUUID do invocador
+        const summoner = await getPuuid(gameName, tagLine);
+
+        // Obter a lista de partidas do invocador
         const matches = await getMatches(summoner);
 
+        // Obter detalhes de cada partida
         const detailedMatches = await Promise.all(
             matches.slice(0, 5).map(async (matchId: string) => {
                 const matchDetails = await getMatchDetails(matchId, summoner);
                 return {
                     ...matchDetails,
-                    username: name,
-                    tag: tag
+                    username: gameName,
+                    tag: tagLine,
                 };
             })
         );
 
         return (
             <div>
+                <h1 className="text-2xl font-bold mb-6 text-center">Histórico de Partidas de {gameName}#{tagLine}</h1>
                 <MatchList matches={detailedMatches} mode="history" />
             </div>
         );
